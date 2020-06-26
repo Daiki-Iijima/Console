@@ -1,13 +1,10 @@
-﻿// ConsoleCommandTest.cpp : このファイルには 'main' 関数が含まれています。プログラム実行の開始と終了がそこで行われます。
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <windows.h>
 
 using namespace std;
 
 void getConsoleSize(int&, int&);
-
+void DrawPunctuation(int, int, HANDLE*);
 
 int main()
 {
@@ -32,25 +29,68 @@ int main()
 	DWORD cell;
 	COORD defoPos = { 0,0 };
 
-	for (;;)
+	getConsoleSize(columns, rows);
+
+
+	char data[10000];
+	const char* kaigyo = "\n";
+	int count = 0;
+	//SetConsoleCursorPosition(consoleHandle2, { 0,0 });
+
+
+
+	for (int i = 0; i < rows; i++)
 	{
-		SetConsoleCursorPosition(consoleHandle1, defoPos);
+		for (int j = 0; j < columns; j++)
+		{
+			data[count] = '+';
+			count++;
+		}
 
-		// スクリーンバッファを指定して文字を書き込む
-		WriteConsole(consoleHandle1, str1, strlen(str1), &cell, NULL);
-		SetConsoleActiveScreenBuffer(consoleHandle1);
-
-		//SetConsoleCursorPosition(consoleHandle2, defoPos);
-
-		WriteConsole(consoleHandle2, str2, strlen(str2), &cell, NULL);
-		SetConsoleActiveScreenBuffer(consoleHandle2);
+		data[(i + 1)*columns] = '\n';
 	}
-	// スクリーンバッファを解放
-	CloseHandle(consoleHandle1);
-	consoleHandle1 = NULL;
 
-	CloseHandle(consoleHandle2);
-	consoleHandle2 = NULL;
+	for (int i = 0; i < sizeof(data); i++)
+	{
+		if (data[i] == '+')
+			cout << data[i];
+	}
+
+	//for (;;)
+	//{
+	//	SetConsoleCursorPosition(consoleHandle1, defoPos);
+
+	//	// スクリーンバッファを指定して文字を書き込む
+	//	DrawPunctuation(columns, rows, &consoleHandle1);
+	//	Sleep(1000);
+	//	//SetConsoleCursorPosition(consoleHandle2, defoPos);
+
+	//	char data[10000];
+	//	const char* kaigyo = "\n";
+
+	//	SetConsoleCursorPosition(consoleHandle2, { 0,0 });
+
+	//	for (int i = 1; i < rows + 1; i++)
+	//	{
+	//		for (int j = 0; j < columns; j++)
+	//		{
+	//			data[i*j] = '+';
+	//		}
+	//		data[i*columns+1] = '\n';
+	//	}
+
+	//	WriteConsole(consoleHandle2, data, strlen(data), NULL, NULL);
+
+	//	SetConsoleActiveScreenBuffer(consoleHandle2);
+	//	Sleep(1000);
+
+	//}
+	//// スクリーンバッファを解放
+	//CloseHandle(consoleHandle1);
+	//consoleHandle1 = NULL;
+
+	//CloseHandle(consoleHandle2);
+	//consoleHandle2 = NULL;
 
 	//for (;;)
 	//{
@@ -66,19 +106,9 @@ int main()
 	return 0;
 }
 
-void DrawPunctuation(int columns, int rows)
+void DrawPunctuation(int columns, int rows, HANDLE* consoleHandle)
 {
-	system("cls");								//	画面をクリア
 
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < columns; j++)
-		{
-			cout << "+";
-		}
-		cout << endl;
-
-	}
 }
 
 void getConsoleSize(int &columns, int &rows)
@@ -89,14 +119,3 @@ void getConsoleSize(int &columns, int &rows)
 	columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
 	rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 }
-
-// プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー
-// プログラムのデバッグ: F5 または [デバッグ] > [デバッグの開始] メニュー
-
-// 作業を開始するためのヒント: 
-//    1. ソリューション エクスプローラー ウィンドウを使用してファイルを追加/管理します 
-//   2. チーム エクスプローラー ウィンドウを使用してソース管理に接続します
-//   3. 出力ウィンドウを使用して、ビルド出力とその他のメッセージを表示します
-//   4. エラー一覧ウィンドウを使用してエラーを表示します
-//   5. [プロジェクト] > [新しい項目の追加] と移動して新しいコード ファイルを作成するか、[プロジェクト] > [既存の項目の追加] と移動して既存のコード ファイルをプロジェクトに追加します
-//   6. 後ほどこのプロジェクトを再び開く場合、[ファイル] > [開く] > [プロジェクト] と移動して .sln ファイルを選択します
